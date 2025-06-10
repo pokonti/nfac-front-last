@@ -8,6 +8,23 @@ const WIDTH = 800;
 const HEIGHT = 600;
 const SIZE = 10;
 
+const PLAYER_COLORS = [
+  '#FF6B6B', 
+  '#4ECDC4', 
+  '#45B7D1', 
+  '#96CEB4', 
+  '#FFEEAD', 
+  '#D4A5A5', 
+  '#9B59B6', 
+  '#3498DB', 
+  '#E67E22', 
+  '#2ECC71', 
+];
+
+const getRandomColor = () => {
+  return PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
+};
+
 export default function GameField() {
   const canvasRef = useRef(null);
   const [playerId] = useState(uuidv4());
@@ -15,7 +32,7 @@ export default function GameField() {
     id: playerId,
     x: WIDTH / 2,
     y: HEIGHT / 2,
-    color: '#' + Math.floor(Math.random() * 16777215).toString(16),
+    color: getRandomColor(),
     name: 'Player'
   });
 
@@ -35,10 +52,28 @@ export default function GameField() {
       Object.values(players).forEach(p => {
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x, p.y, SIZE, SIZE);
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 5;
+        ctx.fillRect(p.x, p.y, SIZE, SIZE);
+        ctx.shadowBlur = 0;
       });
     };
     draw();
   }, [players]);
 
-  return <canvas ref={canvasRef} width={WIDTH} height={HEIGHT} style={{ backgroundColor: '#111' }} />;
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 p-4">
+      <div className="relative">
+        <canvas 
+          ref={canvasRef} 
+          width={WIDTH} 
+          height={HEIGHT} 
+          className="rounded-lg shadow-2xl border-4 border-indigo-500/50 bg-gray-800"
+        />
+        <div className="absolute top-4 left-4 text-white text-sm font-mono bg-gray-800/80 px-2 py-1 rounded">
+          Players: {Object.keys(players).length}
+        </div>
+      </div>
+    </div>
+  );
 }
