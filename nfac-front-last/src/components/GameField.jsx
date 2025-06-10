@@ -25,7 +25,7 @@ const getRandomColor = () => {
   return PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
 };
 
-export default function GameField() {
+export default function GameField({ nickname }) {
   const canvasRef = useRef(null);
   const [playerId] = useState(uuidv4());
   const [player, setPlayer] = useState({
@@ -33,7 +33,7 @@ export default function GameField() {
     x: WIDTH / 2,
     y: HEIGHT / 2,
     color: getRandomColor(),
-    name: 'Player'
+    name: nickname
   });
 
   useEffect(() => {
@@ -56,6 +56,10 @@ export default function GameField() {
         ctx.shadowBlur = 5;
         ctx.fillRect(p.x, p.y, SIZE, SIZE);
         ctx.shadowBlur = 0;
+        ctx.fillStyle = 'white';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.name, p.x + SIZE/2, p.y - 5);
       });
     };
     draw();
